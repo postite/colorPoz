@@ -10,21 +10,30 @@ var ColorPoz = function() {
 	log(this.hex);
 	var $it0 = (function($this) {
 		var $r;
-		var _this = Global.doc.artboards();
+		var _this = Global.doc.pages();
 		$r = new NativeArrayIterator(_this);
 		return $r;
 	}(this));
 	while( $it0.hasNext() ) {
-		var arts = $it0.next();
+		var p = $it0.next();
 		var $it1 = (function($this) {
 			var $r;
-			var _this = arts.layers();
+			var _this = p.artboards();
 			$r = new NativeArrayIterator(_this);
 			return $r;
 		}(this));
 		while( $it1.hasNext() ) {
-			var layer = $it1.next();
-			this.loop(layer);
+			var arts = $it1.next();
+			var $it2 = (function($this) {
+				var $r;
+				var _this = arts.layers();
+				$r = new NativeArrayIterator(_this);
+				return $r;
+			}(this));
+			while( $it2.hasNext() ) {
+				var layer = $it2.next();
+				this.loop(layer);
+			}
 		}
 	}
 	log("done");
@@ -49,10 +58,11 @@ ColorPoz.prototype = {
 	,swapcolor: function(l,inCol,outCol) {
 		var fill = l.style().fills().firstObject();
 		var fillCol = fill.color();
+		var alpha = fillCol.alpha();
 		if(fillCol.hexValue().toString() == inCol) {
 			var m = "match=" + fillCol.hexValue();
 			log(m);
-			fill.setColor(MSColor.colorWithHex_alpha(outCol,1));
+			fill.setColor(MSColor.colorWithHex_alpha(outCol,alpha));
 		}
 	}
 };
