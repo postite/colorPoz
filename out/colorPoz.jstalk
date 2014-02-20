@@ -1,3 +1,4 @@
+// ColorPoz (ctrl alt command c) 
 (function () { "use strict";
 var ColorPoz = function() {
 	log("ColorPoz");
