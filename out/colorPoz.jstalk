@@ -1,0 +1,123 @@
+(function () { "use strict";
+var ColorPoz = function() {
+	log("ColorPoz");
+	try {
+		this.hexSelected = Global.selection.firstObject().style().fills().firstObject().color().hexValue();
+	} catch( message ) {
+		return helpers.UI.alert("please select a colored object");
+	}
+	this.hex = doc.askForUserInput_ofType_initialValue("replace all #" + this.hexSelected + "width:",0,"cc3300");
+	log(this.hex);
+	var $it0 = (function($this) {
+		var $r;
+		var _this = Global.doc.artboards();
+		$r = new NativeArrayIterator(_this);
+		return $r;
+	}(this));
+	while( $it0.hasNext() ) {
+		var arts = $it0.next();
+		var $it1 = (function($this) {
+			var $r;
+			var _this = arts.layers();
+			$r = new NativeArrayIterator(_this);
+			return $r;
+		}(this));
+		while( $it1.hasNext() ) {
+			var layer = $it1.next();
+			this.loop(layer);
+		}
+	}
+	log("done");
+};
+ColorPoz.main = function() {
+	var app = new ColorPoz();
+};
+ColorPoz.prototype = {
+	loop: function(layer) {
+		if(!helpers.Layer.isGroup(layer)) return this.swapcolor(layer,this.hexSelected,this.hex);
+		var $it0 = (function($this) {
+			var $r;
+			var _this = layer.layers();
+			$r = new NativeArrayIterator(_this);
+			return $r;
+		}(this));
+		while( $it0.hasNext() ) {
+			var l = $it0.next();
+			this.loop(l);
+		}
+	}
+	,swapcolor: function(l,inCol,outCol) {
+		var fill = l.style().fills().firstObject();
+		var fillCol = fill.color();
+		if(fillCol.hexValue().toString() == inCol) {
+			var m = "match=" + fillCol.hexValue();
+			log(m);
+			fill.setColor(MSColor.colorWithHex_alpha(outCol,1));
+		}
+	}
+};
+var Global = function() { };
+var HxOverrides = function() { };
+HxOverrides.iter = function(a) {
+	return { cur : 0, arr : a, hasNext : function() {
+		return this.cur < this.arr.length;
+	}, next : function() {
+		return this.arr[this.cur++];
+	}};
+};
+var IntIterator = function(min,max) {
+	this.min = min;
+	this.max = max;
+};
+var NativeArrayIterator = function(ar) {
+	this.array = ar;
+	this.i = 0;
+};
+NativeArrayIterator.prototype = {
+	next: function() {
+		return this.array[this.i++];
+	}
+	,hasNext: function() {
+		return this.i < this.array.length();
+	}
+	,reset: function() {
+		this.i = 0;
+	}
+	,keys: function() {
+		return new IntIterator(0,this.array.length());
+	}
+	,haxeArray: function() {
+		var a = [];
+		var $it0 = this;
+		while( $it0.hasNext() ) {
+			var e = $it0.next();
+			a.push(e);
+		}
+		return a;
+	}
+};
+var bs = {};
+bs.BomberCommands = function() { };
+bs.BomberCommands.alert = function(msg,title) {
+	if(title == null) title = "Whoops";
+	var app = NSApplication.sharedApplication();
+	log(app);
+	app.displayDialog_withTitle(msg,title);
+};
+var helpers = {};
+helpers.Layer = function() { };
+helpers.Layer._class = function(layer) {
+	return layer.class();
+};
+helpers.Layer.isGroup = function(l) {
+	var klass = helpers.Layer._class(l);
+	return klass == MSLayerGroup;
+};
+helpers.UI = function() { };
+helpers.UI.alert = function(msg,title) {
+	bs.BomberCommands.alert(msg,title);
+};
+Global.doc = doc;
+Global.selection = selection;
+ColorPoz.main();
+})();

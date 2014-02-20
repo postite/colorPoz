@@ -1,0 +1,16 @@
+-cp colorPoz
+--each
+
+
+-main ColorPoz
+-cp sketchApi
+-lib erazor
+-js colorPoz/out/colorPoz.jstalk
+-dce full
+
+--next
+
+-x CopyPlug
+
+
+
