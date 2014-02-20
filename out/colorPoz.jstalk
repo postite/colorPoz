@@ -7,7 +7,7 @@ var ColorPoz = function() {
 	} catch( message ) {
 		return helpers.UI.alert("please select a colored object");
 	}
-	this.hex = doc.askForUserInput_ofType_initialValue("replace all #" + this.hexSelected + "width:",0,"cc3300");
+	this.hex = doc.askForUserInput_ofType_initialValue("replace all colored like #" + this.hexSelected + "with:",0,"cc3300");
 	log(this.hex);
 	var $it0 = (function($this) {
 		var $r;

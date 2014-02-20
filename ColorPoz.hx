@@ -15,7 +15,7 @@ class ColorPoz
 		hexSelected=selection.firstObject().style().fills().firstObject().color().hexValue()
 		catch (message:Dynamic)
 		return UI.alert("please select a colored object");
-		hex=doc.askForUserInput("replace all #"+hexSelected+ "width:",0,"cc3300");
+		hex=doc.askForUserInput("replace all colored like #"+hexSelected+ "with:",0,"cc3300");
 		log( hex);
 		for ( p in doc.pages())
 			for (arts in p.artboards())
