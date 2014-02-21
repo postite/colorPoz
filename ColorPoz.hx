@@ -1,3 +1,4 @@
+
 import Global.*;
 using helpers.Document;
 using helpers.Artboard;
@@ -34,17 +35,26 @@ class ColorPoz
 	
 	function swapcolor(l:MSLayer,inCol:String,outCol:String)
 	{	
-		
+		_trace("swap");
 		var fill= l.style().fills().firstObject();
 		var fillCol=fill.color();
-		var alpha=fillCol.alpha();
+		
+		
 		
 		if( fillCol.hexValue().toString() == inCol){
 			log( "match="+fillCol.hexValue());
-			fill.setColor(MSColor.colorWithHex(outCol,alpha));
+			fill.setColor(MSColor.colorWithHex(outCol,fillCol.alpha()));
 			
 		}
+		var borders=l.style().borders();
+		if( borders.length>0){
 
+		var border=borders.firstObject();
+		var bordCol=border.color();
+			_trace( bordCol );
+		if(bordCol.hexValue().toString() ==inCol)
+			border.setColor(MSColor.colorWithHex(outCol,bordCol.alpha()));
+		}
 
 	}
 	

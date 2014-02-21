@@ -5,7 +5,7 @@ var ColorPoz = function() {
 	try {
 		this.hexSelected = Global.selection.firstObject().style().fills().firstObject().color().hexValue();
 	} catch( message ) {
-		return helpers.UI.alert("please select a colored object");
+		return helpers.UI.alert("please select a colored object and do it again  :)");
 	}
 	this.hex = doc.askForUserInput_ofType_initialValue("replace all colored like #" + this.hexSelected + "with:",0,"cc3300");
 	log(this.hex);
@@ -39,6 +39,7 @@ var ColorPoz = function() {
 	}
 	log("done");
 };
+ColorPoz.__name__ = true;
 ColorPoz.main = function() {
 	var app = new ColorPoz();
 };
@@ -57,18 +58,39 @@ ColorPoz.prototype = {
 		}
 	}
 	,swapcolor: function(l,inCol,outCol) {
+		var p = { fileName : "ColorPoz.hx", lineNumber : 38, className : "ColorPoz", methodName : "swapcolor"};
+		log(p.className + " " + p.lineNumber + "  " + "swap");
 		var fill = l.style().fills().firstObject();
 		var fillCol = fill.color();
-		var alpha = fillCol.alpha();
 		if(fillCol.hexValue().toString() == inCol) {
 			var m = "match=" + fillCol.hexValue();
 			log(m);
-			fill.setColor(MSColor.colorWithHex_alpha(outCol,alpha));
+			fill.setColor((function($this) {
+				var $r;
+				var _alpha = fillCol.alpha();
+				$r = MSColor.colorWithHex_alpha(outCol,_alpha);
+				return $r;
+			}(this)));
+		}
+		var borders = l.style().borders();
+		if(borders.length() > 0) {
+			var border = borders.firstObject();
+			var bordCol = border.color();
+			var p = { fileName : "ColorPoz.hx", lineNumber : 54, className : "ColorPoz", methodName : "swapcolor"};
+			log(p.className + " " + p.lineNumber + "  " + Std.string(bordCol));
+			if(bordCol.hexValue().toString() == inCol) border.setColor((function($this) {
+				var $r;
+				var _alpha = bordCol.alpha();
+				$r = MSColor.colorWithHex_alpha(outCol,_alpha);
+				return $r;
+			}(this)));
 		}
 	}
 };
 var Global = function() { };
+Global.__name__ = true;
 var HxOverrides = function() { };
+HxOverrides.__name__ = true;
 HxOverrides.iter = function(a) {
 	return { cur : 0, arr : a, hasNext : function() {
 		return this.cur < this.arr.length;
@@ -80,10 +102,12 @@ var IntIterator = function(min,max) {
 	this.min = min;
 	this.max = max;
 };
+IntIterator.__name__ = true;
 var NativeArrayIterator = function(ar) {
 	this.array = ar;
 	this.i = 0;
 };
+NativeArrayIterator.__name__ = true;
 NativeArrayIterator.prototype = {
 	next: function() {
 		return this.array[this.i++];
@@ -107,8 +131,14 @@ NativeArrayIterator.prototype = {
 		return a;
 	}
 };
+var Std = function() { };
+Std.__name__ = true;
+Std.string = function(s) {
+	return js.Boot.__string_rec(s,"");
+};
 var bs = {};
 bs.BomberCommands = function() { };
+bs.BomberCommands.__name__ = true;
 bs.BomberCommands.alert = function(msg,title) {
 	if(title == null) title = "Whoops";
 	var app = NSApplication.sharedApplication();
@@ -117,6 +147,7 @@ bs.BomberCommands.alert = function(msg,title) {
 };
 var helpers = {};
 helpers.Layer = function() { };
+helpers.Layer.__name__ = true;
 helpers.Layer._class = function(layer) {
 	return layer.class();
 };
@@ -125,10 +156,83 @@ helpers.Layer.isGroup = function(l) {
 	return klass == MSLayerGroup;
 };
 helpers.UI = function() { };
+helpers.UI.__name__ = true;
 helpers.UI.alert = function(msg,title) {
 	bs.BomberCommands.alert(msg,title);
 };
+var js = {};
+js.Boot = function() { };
+js.Boot.__name__ = true;
+js.Boot.__string_rec = function(o,s) {
+	if(o == null) return "null";
+	if(s.length >= 5) return "<...>";
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
+	switch(t) {
+	case "object":
+		if(o instanceof Array) {
+			if(o.__enum__) {
+				if(o.length == 2) return o[0];
+				var str = o[0] + "(";
+				s += "\t";
+				var _g1 = 2;
+				var _g = o.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
+				}
+				return str + ")";
+			}
+			var l = o.length;
+			var i;
+			var str = "[";
+			s += "\t";
+			var _g = 0;
+			while(_g < l) {
+				var i1 = _g++;
+				str += (i1 > 0?",":"") + js.Boot.__string_rec(o[i1],s);
+			}
+			str += "]";
+			return str;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e ) {
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString) {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") return s2;
+		}
+		var k = null;
+		var str = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str.length != 2) str += ", \n";
+		str += s + k + " : " + js.Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str += "\n" + s + "}";
+		return str;
+	case "function":
+		return "<function>";
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
 Global.doc = doc;
 Global.selection = selection;
+String.__name__ = true;
+Array.__name__ = true;
 ColorPoz.main();
 })();
