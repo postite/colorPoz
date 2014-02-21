@@ -35,7 +35,7 @@ class ColorPoz
 	
 	function swapcolor(l:MSLayer,inCol:String,outCol:String)
 	{	
-		_trace("swap");
+		//_trace("swap");
 		var fill= l.style().fills().firstObject();
 		var fillCol=fill.color();
 		
@@ -51,7 +51,7 @@ class ColorPoz
 
 		var border=borders.firstObject();
 		var bordCol=border.color();
-			_trace( bordCol );
+			//_trace( bordCol );
 		if(bordCol.hexValue().toString() ==inCol)
 			border.setColor(MSColor.colorWithHex(outCol,bordCol.alpha()));
 		}
