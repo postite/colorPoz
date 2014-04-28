@@ -19,16 +19,16 @@ var ColorPoz = function() {
 		var p = $it0.next();
 		var $it1 = (function($this) {
 			var $r;
-			var _this = p.artboards();
-			$r = new NativeArrayIterator(_this);
+			var _this1 = p.artboards();
+			$r = new NativeArrayIterator(_this1);
 			return $r;
 		}(this));
 		while( $it1.hasNext() ) {
 			var arts = $it1.next();
 			var $it2 = (function($this) {
 				var $r;
-				var _this = arts.layers();
-				$r = new NativeArrayIterator(_this);
+				var _this2 = arts.layers();
+				$r = new NativeArrayIterator(_this2);
 				return $r;
 			}(this));
 			while( $it2.hasNext() ) {
@@ -60,8 +60,7 @@ ColorPoz.prototype = {
 		var fill = l.style().fills().firstObject();
 		var fillCol = fill.color();
 		if(fillCol.hexValue().toString() == inCol) {
-			var m = "match=" + fillCol.hexValue();
-			log(m);
+			Global.log("match=" + fillCol.hexValue());
 			fill.setColor((function($this) {
 				var $r;
 				var _alpha = fillCol.alpha();
@@ -75,14 +74,17 @@ ColorPoz.prototype = {
 			var bordCol = border.color();
 			if(bordCol.hexValue().toString() == inCol) border.setColor((function($this) {
 				var $r;
-				var _alpha = bordCol.alpha();
-				$r = MSColor.colorWithHex_alpha(outCol,_alpha);
+				var _alpha1 = bordCol.alpha();
+				$r = MSColor.colorWithHex_alpha(outCol,_alpha1);
 				return $r;
 			}(this)));
 		}
 	}
 };
 var Global = function() { };
+Global.log = function(m) {
+	log(m);
+};
 var HxOverrides = function() { };
 HxOverrides.iter = function(a) {
 	return { cur : 0, arr : a, hasNext : function() {
