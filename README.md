@@ -1,6 +1,6 @@
 colorPoz
 ========
-
+### sketch2 only
 sketch plugin 
 
 recolor all elements like the selected object color with the hex color of your choice.
